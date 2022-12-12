@@ -16,14 +16,13 @@ function formatDate(timestamp) {
 }
 
 function displayTemperature(response) {
-  console.log(response.data.temperature.current);
-  console.log(response.data.time);
   let temperatureElement = document.querySelector('#temperature');
   let cityElement = document.querySelector("#city");
   let descriptionElement = document.querySelector("#description");
   let humidityElement = document.querySelector("#humidity");
   let windElement = document.querySelector("#wind");
   let dateElement = document.querySelector("#date");
+  let iconElement = document.querySelector("#icon");
 
 
   temperatureElement.innerHTML = Math.round(response.data.temperature.current);
@@ -32,7 +31,8 @@ function displayTemperature(response) {
   humidityElement.innerHTML = `Humidity: ${response.data.temperature.humidity} %`;
   windElement.innerHTML = `Wind: ${Math.round(response.data.wind.speed)} km/h`;
   dateElement.innerHTML = formatDate(response.data.time * 1000);
-  // imgElement.innerHTML('src', response.data.condition.description.icon_url) = 
+  iconElement.setAttribute('src', response.data.condition.icon_url);
+  iconElement.setAttribute("alt", response.data.condition.icon);
   console.log(response.data);
 }
 
