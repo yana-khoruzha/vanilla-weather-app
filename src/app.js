@@ -3,12 +3,12 @@
 function formatDate(timestamp) {
   let date = new Date(timestamp);
   let hours = date.getHours();
-  if (hours < 0) {
-    return `0${hours}`;
+  if (hours < 10) {
+    hours = `0${hours}`;
   }
   let minutes = date.getMinutes();
-  if (minutes < 0) {
-    return `0${minutes}`;
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
   }
   let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let day = days[date.getDay()];
@@ -32,7 +32,7 @@ function displayTemperature(response) {
   dateElement.innerHTML = formatDate(response.data.time * 1000);
   iconElement.setAttribute('src', response.data.condition.icon_url);
   iconElement.setAttribute("alt", response.data.condition.icon);
-  celciusTemperature = Math.round(response.data.temperature.current);
+  celsiusTemperature = Math.round(response.data.temperature.current);
 }
 
 function search(query) {
@@ -49,7 +49,7 @@ function handleSubmit(event) {
 
 function displayFahrenheitTemperature(event) {
   event.preventDefault();
-  let fahrenheitTemperature = (celciusTemperature * 9) / 5 + 32;
+  let fahrenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
   let temperatureElement = document.querySelector("#temperature");
   celsiusLink.classList.remove('active');
   fahrenheitLink.classList.add('active');
@@ -61,10 +61,10 @@ function displayCelsiusTemperature(event) {
   let temperatureElement = document.querySelector("#temperature");
   celsiusLink.classList.add("active");
   fahrenheitLink.classList.remove("active");
-  temperatureElement.innerHTML = celciusTemperature;
+  temperatureElement.innerHTML = celsiusTemperature;
 }
 
-let celciusTemperature = null;
+let celsiusTemperature = null;
 let form = document.querySelector('#search-form');
 form.addEventListener("submit", handleSubmit);
 
@@ -73,3 +73,5 @@ fahrenheitLink.addEventListener('click', displayFahrenheitTemperature);
 
 let celsiusLink = document.querySelector("#celsius-link");
 celsiusLink.addEventListener("click", displayCelsiusTemperature);
+
+search('Kyiv');
