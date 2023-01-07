@@ -12,29 +12,47 @@ function formatDate(timestamp) {
   }
   let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let day = days[date.getDay()];
-  return `Last updated: ${day} ${hours}:${minutes}`
+  return `${day} ${hours}:${minutes}`;
 }
 
-function displayForecast() {
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDay();
+  let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  return days[day];
+}
+
+function displayForecast(response) {
+  let forecast = response.data.daily;
   let forecastElement = document.querySelector('#forecast');
   let forecastHTML = `<div class="row">`
-  let days = ['Thu', 'Fri', 'Sat'];
-  days.forEach(function(day) {
+
+  forecast.forEach(function(forecastDay, index) {
+    console.log(index);
+    if(index < 6) {
     forecastHTML += 
     `<div class="col-2">
-      <div class="weather-forecast-date">${day}</div>
-        <img src="" alt="" width="46">
+      <div class="weather-forecast-date">${formatDay(forecastDay.time)}</div>
+        <img src="${forecastDay.condition.icon_url}" alt="forecast icon" width="46">
         <div class="weather-forecast-temperature">
-          <span class="weather-forecast-temperature-max">18°</span>
-          <span class="weather-forecast-temperature-min">12°</span>
+          <span class="weather-forecast-temperature-max">${Math.round(forecastDay.temperature.maximum)}°</span>
+          <span class="weather-forecast-temperature-min">${Math.round(forecastDay.temperature.minimum)}°</span>
         </div>
     </div>`
-  })
+  }})
+
 
 forecastHTML += `</div>`;
 forecastElement.innerHTML = forecastHTML;
 }
 
+function getForecast(coordinates) {
+  let key = "2aa5d6c3bt94of74014f9bf308abbb25";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?&lat=${coordinates.latitude}&lon=${coordinates.longitude}&key=${key}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
+  console.log(apiUrl);
+}
 
 function displayTemperature(response) {
   let temperatureElement = document.querySelector('#temperature');
@@ -54,6 +72,8 @@ function displayTemperature(response) {
   iconElement.setAttribute('src', response.data.condition.icon_url);
   iconElement.setAttribute("alt", response.data.condition.icon);
   celsiusTemperature = Math.round(response.data.temperature.current);
+
+getForecast(response.data.coordinates);
 }
 
 function search(query) {
@@ -97,6 +117,5 @@ celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
 search('Kyiv');
 
-displayForecast()
 
 
